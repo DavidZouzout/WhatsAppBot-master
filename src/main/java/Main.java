@@ -2,23 +2,17 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Actions;
-
 import javax.swing.*;
-import javax.swing.plaf.TableHeaderUI;
 import java.awt.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Main extends JFrame {
-    private int WINDOW_WIDTH = 800;
-    private int WINDOW_HEIGHT = 500;
+    private final int WINDOW_WIDTH = 800;
+    private final int WINDOW_HEIGHT = 500;
 
 
 
     public static void main(String[] args){
         System.setProperty("webdriver.chrome.driver","C:\\Users\\dzouz\\Downloads\\chromedriver_win32\\chromedriver.exe");
-        Main main = new Main();
     }
 
     public Main() {//מטודות חובה לפתיחת חלון גרפי
@@ -98,7 +92,7 @@ public class Main extends JFrame {
 //                            throw new RuntimeException(e);
 //                        }
 //                    }
-                } else if(isValidPhoneNumber(phoneNumber) == false){
+                } else if(!isValidPhoneNumber(phoneNumber)){
                     System.out.println("phone number error working");
                         JLabel phoneNumberError = new JLabel("⛔ INVALID PHONE NUMBER ⛔");
                         examplePhoneNumberTitle.setVisible(false);
