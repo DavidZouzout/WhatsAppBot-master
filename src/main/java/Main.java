@@ -80,7 +80,10 @@ public class Main extends JFrame {
                     driver.manage().window().maximize();
                     driver.get("https://web.whatsapp.com/send?phone=" + phoneNumber.getText());
                     while(true) {
-                        if (driver.getPageSource().contains("pane-side")) break;
+                        if (driver.findElement(By.className("p3-M1")).isDisplayed()) {
+                            System.out.println("hi");
+                            break;
+                        }
                         else {
                             try {
                                 Thread.sleep(2000);
@@ -89,32 +92,47 @@ public class Main extends JFrame {
                             }
                         }
                     }
-//                    driver.findElement(By.className("_13NKt.copyable-text.selectable-text")).sendKeys(message.getText());
-//                    driver.findElement(By)
+//                    try {
+//                        Thread.sleep(60000);
+//                    } catch (InterruptedException e) {
+//                        throw new RuntimeException(e);
+//                    }
+                    WebElement messageElement =  driver.findElement(By.className ("p3-M1"));
+                    messageElement.click();
+                    messageElement.sendKeys(message.getText());
+//                    driver.findElement(By.className("p3-M1")).click();
+//                    driver.findElement(By.className ("p3-M1")).sendKeys(message.getText());
+//                    driver.findElement(By.className("p3_M1")).sendKeys(Keys.ENTER);
                 } else if(isValidPhoneNumber(phoneNumber) == false){
-                    phoneNumber.setText("⛔ INVALID PHONE NUMBER DETECTED ⛔");
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    phoneNumber.setText("⛔ INVALID PHONE NUMBER ⛔");
+                        try {
+                            Thread.sleep(200);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    phoneNumber.setText("");
                 } else if (message.getText() == null) {
-                    message.setText("⛔ INVALID MESSAGE DETECTED ⛔");
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                        message.setText("⛔ INVALID MESSAGE ⛔");
+                        new Thread(()->{
+                            try {
+                                Thread.sleep(200);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+                        message.setText("");
                 }
+
             });
             repaint();
         });
     }
-    public static boolean isValidPhoneNumber(JTextField textField) {
+    public static boolean isValidPhoneNumber(JTextField textField){
        String tempText = "";
         for (int i = 0; i < 5; i++) {
             tempText += textField.getText().charAt(i);
         }
+        System.out.println(tempText);
         if(textField.getSize().equals(12) && tempText.equals("97250")||tempText.equals("97251") || tempText.equals("97252") || tempText.equals("97253") || tempText.equals("97254")){
             System.out.println(textField.getSize().equals(12));
             return true;
