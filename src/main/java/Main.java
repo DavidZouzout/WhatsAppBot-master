@@ -5,6 +5,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 
 import javax.swing.*;
+import javax.swing.plaf.TableHeaderUI;
 import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,7 +64,7 @@ public class Main extends JFrame {
             JTextField phoneNumber = new JTextField();
             phoneNumber.setBounds(phoneNumberTitle.getX() + 200, phoneNumberTitle.getY(), 150, 30);
             this.add(phoneNumber);
-            JLabel examplePhoneNumberTitle = new JLabel("EXAMPLE 👉 *972538232843* 👈");
+            JLabel examplePhoneNumberTitle = new JLabel("EXAMPLE 👉 *0538232843* 👈");
             examplePhoneNumberTitle.setBounds(phoneNumber.getX() + 150, phoneNumber.getY(), 250, 30);
             this.add(examplePhoneNumberTitle);
             JLabel messageTitle = new JLabel("Enter message here 👉");
@@ -78,63 +79,61 @@ public class Main extends JFrame {
             buttonToSendMessage.addActionListener((event2) ->{
                 if(isValidPhoneNumber(phoneNumber) && message.getText() != null){
                     driver.manage().window().maximize();
-                    driver.get("https://web.whatsapp.com/send?phone=" + phoneNumber.getText());
-                    while(true) {
-                        if (driver.findElement(By.className("p3-M1")).isDisplayed()) {
-                            System.out.println("hi");
-                            break;
-                        }
-                        else {
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
+                    driver.get("https://web.whatsapp.com/send?phone=972" + phoneNumber.getText());
+                   try {                                                                    /* lines 83-87 are temporary*/
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
-//                    try {
-//                        Thread.sleep(60000);
-//                    } catch (InterruptedException e) {
-//                        throw new RuntimeException(e);
+                    WebElement input = driver.findElement(By.cssSelector("#main > footer > div._2BU3P.tm2tP.copyable-area > div > span:nth-child(2) > div > div._2lMWa > div.p3_M1 > div > div._13NKt.copyable-text.selectable-text"));
+                    input.click();
+                    input.sendKeys(message.getText());
+                    input.sendKeys(Keys.ENTER);
+//                    for (int i = 0; i < 10000; i++) {                     // This is if you want it to past a number every second.
+//                        input.sendKeys(message.getText()+i);
+//                        input.sendKeys(Keys.ENTER);
+//                        try {
+//                            Thread.sleep(1000);
+//                        } catch (InterruptedException e) {
+//                            throw new RuntimeException(e);
+//                        }
 //                    }
-                    WebElement messageElement =  driver.findElement(By.className ("p3-M1"));
-                    messageElement.click();
-                    messageElement.sendKeys(message.getText());
-//                    driver.findElement(By.className("p3-M1")).click();
-//                    driver.findElement(By.className ("p3-M1")).sendKeys(message.getText());
-//                    driver.findElement(By.className("p3_M1")).sendKeys(Keys.ENTER);
                 } else if(isValidPhoneNumber(phoneNumber) == false){
-                    phoneNumber.setText("⛔ INVALID PHONE NUMBER ⛔");
+                    System.out.println("phone number error working");
+                        JLabel phoneNumberError = new JLabel("⛔ INVALID PHONE NUMBER ⛔");
+                        examplePhoneNumberTitle.setVisible(false);
+                        phoneNumberError.setBounds(examplePhoneNumberTitle.getX(), examplePhoneNumberTitle.getY(), examplePhoneNumberTitle.getWidth(), examplePhoneNumberTitle.getHeight());
+                        this.add(phoneNumberError);
                         try {
-                            Thread.sleep(200);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    phoneNumber.setText("");
-                } else if (message.getText() == null) {
-                        message.setText("⛔ INVALID MESSAGE ⛔");
-                        new Thread(()->{
-                            try {
-                                Thread.sleep(200);
+                                Thread.sleep(500);
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
-                        });
-                        message.setText("");
+                        phoneNumberError.setVisible(false);
+                        examplePhoneNumberTitle.setVisible(true);
+                } else if (message.getText() == null) {
+                        JLabel messageError = new JLabel("⛔ INVALID MESSAGE ⛔");
+                        messageError.setBounds(examplePhoneNumberTitle.getX(), messageTitle.getY() + 150, 200, 30);
+                        this.add(messageError);
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        messageError.setVisible(false);
                 }
-
             });
             repaint();
         });
     }
     public static boolean isValidPhoneNumber(JTextField textField){
        String tempText = "";
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             tempText += textField.getText().charAt(i);
         }
         System.out.println(tempText);
-        if(textField.getSize().equals(12) && tempText.equals("97250")||tempText.equals("97251") || tempText.equals("97252") || tempText.equals("97253") || tempText.equals("97254")){
-            System.out.println(textField.getSize().equals(12));
+        if(textField.getDocument().getLength() == 10 && (tempText.equals("050")||tempText.equals("051") || tempText.equals("052") || tempText.equals("053") || tempText.equals("054"))){
+            System.out.println(textField.getDocument().getLength() == 10);
             return true;
         }
         return false;
