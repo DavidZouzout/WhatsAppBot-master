@@ -109,7 +109,7 @@ public class Main extends JFrame {
                     while (true) {
                         if (driver.getPageSource().contains("pane-side")) {
                             try {
-                                Thread.sleep(2000);
+                                Thread.sleep(3000);
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
@@ -118,6 +118,7 @@ public class Main extends JFrame {
                             input.click();
                             input.sendKeys(message.getText());
                             input.sendKeys(Keys.ENTER);
+                            driver.manage().window().minimize();
                             title2.setText("Message  has  sent successfully:");
                             break;
                         }
